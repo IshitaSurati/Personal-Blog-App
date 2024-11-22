@@ -1,4 +1,4 @@
-.idea
+.env
 node_modules
 api/uploads/*
 # https://github.com/IshitaSurati/Personal-Blog-App

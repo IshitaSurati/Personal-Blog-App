@@ -5,12 +5,22 @@ import '../style/styles.css';
 function PostPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:4000/post/${id}`)
-      .then((response) => response.json())
-      .then((data) => setPost(data));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Post not found or server error');
+        }
+        return response.json();
+      })
+      .then((data) => setPost(data))
+      .catch((error) => {
+        console.error('Error fetching post:', error);
+        setError('Failed to load post');
+      });
   }, [id]);
 
   const handleDelete = () => {
@@ -29,6 +39,7 @@ function PostPage() {
     navigate(`/edit/${id}`);
   };
 
+  if (error) return <div>{error}</div>;
   if (!post) return <div>Loading...</div>;
 
   return (
